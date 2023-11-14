@@ -1,0 +1,147 @@
+@charset "UTF-8";
+
+select,
+input,
+textarea {
+   outline: none;
+  resize: none;
+}
+select,
+textarea,
+input {
+  transition: .25s;
+  border-radius: 3px;
+  font-size: 12px;
+  border: 1px solid lightgrey;
+  padding: 5px 10px;
+}
+td {
+	 width: 50px;
+	 height: 50px;
+}
+.add{
+    text-align: center;
+}
+.Calendar { 
+	padding:20px;
+	align: center;
+    text-align: center;
+    margin: 0 auto; 
+    width: 60%;
+    height: 90%;
+}
+.header{
+	font-size:20px;
+}
+.dateHeader{
+	font-size:30px;
+}
+.add{
+	font-size:20px;
+}
+.calBody{
+	text-align: left;
+	text-decoration: underline;
+	vertical-align : top;
+}
+
+.Calendar>thead>tr:last-child>td {
+    background-color: #fadbe2;
+    color: black;
+}        
+
+/* .pastDay{ background-color: lightgray; } */
+
+.today{            
+	border: 3px solid #fd8aa9;          
+    cursor: pointer;
+}
+
+.futureDay{            
+    background-color: #FFFFFF;
+    cursor: pointer;
+}
+
+.futureDay.choiceDay, .today.choiceDay{            
+    background-color: #3E85EF;            
+    color: #fff;
+    cursor: pointer;
+}		
+
+
+.popup
+,.popup_detail {
+   display: none;
+   position: absolute;
+   top: 0; left: 0;
+   width: 100%; height: 100%;
+   padding: 20px;
+   z-index: 999;
+}
+.dim
+,.dim_detail {
+  position: absolute;
+  top: 0; left: 0;
+   width: 100%; height: 100%;
+  background: rgb(0 , 0, 0, 0.7);
+}
+.popup_main
+,.popup_main_detail {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+   width: 40%; height: 70%;
+  background: #fff;
+  border-radius: 5px;
+  box-shadow: 0 0 10px rgb(0 , 0, 0, 0.5);
+  padding: 15px;
+  overflow: scroll;
+}
+.schedulerForm > div
+,.upDelForm > div {
+	padding: 5px;
+   border: 1px solid lightgray;
+}
+.schedulerForm > div > div
+,.upDelForm > div > div {
+	padding: 10px;
+}
+.title {
+	font-size: 25px;
+  	font-weight: bold;
+	padding: 10px;
+	color: #333333;
+}
+.delete,
+.cancel,
+.save,
+.update {
+  display: inline-block;
+  border-radius: 5px;
+  width: 100px; height: 30px;
+  line-height: 30px;
+  text-align: center;
+  font-weight: 400;
+  margin: 10px 0 0;
+  font-size: 14px;
+  padding: 0 10px;
+  transition: .25s;
+  color: #0000CD;
+  background: #fff;
+  margin-right: 10px;
+  cursor: pointer;
+}
+.save
+,.update {
+  background-color: #fd8aa9;
+  color: #fff;
+}
+.delete,
+.cancel {
+  border: 1px solid lightgrey;
+  color:#fd8aa9;
+}
+.save:hover
+,.update:hover {
+  box-shadow: 0 0 10px rgba(18, 18, 32, 0.20);
+}

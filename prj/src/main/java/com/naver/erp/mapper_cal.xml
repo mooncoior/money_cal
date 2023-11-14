@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.naver.erp.CalDAO">
+
+<insert id="addCal" parameterType="com.naver.erp.CalendarDTO">
+	insert into calendar(
+		cal_num
+		,subject
+         <if test="summary!=null and summary.length()>0">
+		,summary
+		</if>
+		,schedule_start_date
+		,schedule_end_date
+		<if test="location!=null and location.length()>0">
+		,location
+		</if>
+		,color) 
+	values(
+		(select nvl(max(to_number(cal_num)),0)+1 from calendar)
+		,#{subject}
+         <if test="summary!=null and summary.length()>0">
+		,#{summary}
+		</if>
+		,to_date(substr(#{schedule_start_date},1,10)||' '||substr(#{schedule_start_date},12),'yyyy-mm-dd hh24:mi')
+		,to_date(substr(#{schedule_end_date},1,10)||' '||substr(#{schedule_end_date},12),'yyyy-mm-dd hh24:mi')
+         <if test="location!=null and location.length()>0">
+		,#{location}
+		</if>
+		,#{color}
+	)
+</insert>
+
+<select id="getCalList" parameterType="com.naver.erp.CalendarDTO" resultType="java.util.HashMap">
+	select 
+		cal_num "cal_num"
+		,subject "subject"
+		,summary "summary"
+		,to_char(schedule_start_date,'yyyymmdd') "schedule_start_date"
+		,to_char(schedule_end_date,'yyyymmdd') "schedule_end_date"
+		,location "location"
+		,color "color"
+	from calendar
+</select>
+<select id="getCalDetail" parameterType="com.naver.erp.CalendarDTO" resultType="java.util.HashMap">
+	select 
+		cal_num "cal_num"
+		,subject "subject"
+		,summary "summary"
+		,to_char(schedule_start_date,'yyyy-mm-dd')||'T'||to_char(schedule_start_date,'hh24:mi') "schedule_start_date"
+		,to_char(schedule_end_date,'yyyy-mm-dd')||'T'||to_char(schedule_end_date,'hh24:mi') "schedule_end_date"
+		,location "location"
+		,color "color"
+	from calendar
+	where cal_num = ${cal_num}
+</select>
+
+
+<update id="upCal"  parameterType="com.naver.erp.CalendarDTO" >
+		update
+			calendar
+		set
+			subject  = #{subject}
+			,schedule_start_date = to_date(substr(#{schedule_start_date},1,10)||' '||substr(#{schedule_start_date},12),'yyyy-mm-dd hh24:mi')
+			,schedule_end_date = to_date(substr(#{schedule_end_date},1,10)||' '||substr(#{schedule_end_date},12),'yyyy-mm-dd hh24:mi')
+			,color = #{color}
+			<if test = "location!=null and location.length()>0">
+				,location = #{location}
+			</if>
+			<if test = "location==null or location.length()==0">
+				,location = null
+			</if>
+			<if test = "summary!=null and summary.length()>0">
+				,summary = #{summary}
+			</if>
+			<if test = "summary==null or summary.length()==0">
+				,summary = null
+			</if>
+		where
+			cal_num=${cal_num} 
+</update>
+<delete id="delCal"  parameterType="com.naver.erp.CalendarDTO" >
+		delete from calendar
+		where
+			cal_num=${cal_num} 
+</delete>
+
+</mapper>
