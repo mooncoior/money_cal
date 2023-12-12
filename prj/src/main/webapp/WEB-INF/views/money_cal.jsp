@@ -155,55 +155,18 @@
 	           ,$("[name='upDelForm']")
 	           ,function(json){
 	            var data = json.calList[0];
-				console.log(data);
-	
+			
+				$('.upDelForm').find('[name="inOrOut"]').val(data.category_money);
 	            $('.upDelForm').find('[name="subject"]').val(data.subject);
-	            $('.upDelForm').find('[name="summary"]').val(data.summary);
-	            $('.upDelForm').find('[name="schedule_start_date"]').val(data.schedule_start_date.substr(0,16));
-	            $('.upDelForm').find('[name="schedule_end_date"]').val(data.schedule_end_date.substr(0,16));
-	            $('.upDelForm').find('[name="color"]').val(data.color);
-	            $('.upDelForm').find('[name="location"]').val(data.location);
+	            $('.upDelForm').find('[name="when_date"]').val(data.when_date);
+	            $('.upDelForm').find('[name="money"]').val(data.money);
+	            $('.upDelForm').find('[name="memo"]').val(data.memo);
 	           }
 	     	)
          }
         
         function update(){        	
-        	/* var obj=$("[name='upDelForm']");
-        	var check_subject = obj.find("[name='subject']");
-        	var check_schedule_start_date = obj.find("[name='schedule_start_date']");
-        	var check_schedule_end_date = obj.find("[name='schedule_end_date']");
-        	var check_summary = obj.find("[name='summary']");
-        	var check_location = obj.find("[name='location']");
-        	var check_color = obj.find("[name='color']");
         	
-       		if(check_subject.val()==null || check_subject.val()=='') {
-       	        alert("일정 이름을 입력해주세요.");
-       	     	check_subject.focus();
-       	        return;
-       	    }
-       		if(check_schedule_start_date.val()==null || check_schedule_start_date.val()=='') {
-       	        alert("시작일을 입력해주세요.");
-       	     	check_schedule_start_date.focus();
-       	        return;
-       	    }
-       		if(check_schedule_end_date.val()==null || check_schedule_end_date.val()=='') {
-       	        alert("종료일을 입력해주세요.");
-       	    		check_schedule_end_date.focus();
-       	        return;
-       	    }
-       		if(check_schedule_start_date.val() > check_schedule_end_date.val()) {
-       	        alert("시작일은 종료일을 초과할 수 없습니다.");
-       	     	check_schedule_start_date.focus();
-       	        return;
-       	    }
-       		
-       		if(check_color.val()==null || check_color.val()=='') {
-       	        alert("표시 색상을 선택해주세요.");
-       	     	check_color.focus();
-       	        return;
-       	    }
-       		 */
-
         	if( confirm("수정하시겠습니까?")==false ) { return; }
         	
         	ajax(
@@ -387,7 +350,7 @@
         <div class="dim_list">
           <div class='popup_main_list'>
                 <form name="listForm" class="listForm">
-                    <header class="title">수입/지출 목록</header>
+                    <header class="title_list">수입/지출 목록</header>
         			<input type="hidden" name="select_when_date">
                     <div style="display: flex;">
                         <div>수입/지출</div>
@@ -424,8 +387,8 @@
                         <div>
                         	<select name="inOrOut">
                                 <option></option>
-                                <option value="income">수입</option>
-                                <option value="expense">지출</option>
+                                <option value="수입">수입</option>
+                                <option value="지출">지출</option>
                                
                            </select>
 						</div>

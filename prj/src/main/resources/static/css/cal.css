@@ -118,7 +118,8 @@ td {
 ,.upDelForm > div > div {
 	padding: 10px;
 }
-.title {
+.title
+,.title_list {
 	font-size: 25px;
   	font-weight: bold;
 	padding: 10px;

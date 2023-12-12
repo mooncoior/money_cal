@@ -48,8 +48,10 @@
 <select id="getCalDetail" parameterType="com.naver.erp.CalendarDTO" resultType="java.util.HashMap">
 	select 
 		cal_num "cal_num"
+		,category_money "category_money"
 		,subject "subject"
-		,to_char(when_date,'yyyy-mm-dd')||'T'||to_char(when_date,'hh24:mi') "when_date"
+		,abs(amount_money) "money"
+		,to_char(when_date,'yyyy-mm-dd') "when_date"
 		,memo "memo"
 	from money_cal
 	where cal_num = ${cal_num}
@@ -60,10 +62,15 @@
 		update
 			money_cal
 		set
-			subject  = #{subject}
-			
+			category_money  = #{inOrOut}
+			,subject  = #{subject}
+			,amount_money  = ${money}
+			,when_date  = to_date(#{when_date},'yyyy-mm-dd')
+         	<if test="memo!=null and memo.length()>0">
+			,memo  = #{memo}
+			</if>
 		where
-			cal_num=${cal_num} 
+			cal_num=#{cal_num} 
 </update>
 <delete id="delCal"  parameterType="com.naver.erp.CalendarDTO" >
 		delete from money_cal
