@@ -10,7 +10,20 @@
 <link rel="stylesheet" href="css/cal.css">
 
     <script language="javaScript">
-        window.onload = function () { buildCalendar(); }    // 웹 페이지가 로드되면 buildCalendar 실행
+    // 웹 페이지가 로드되면 buildCalendar 실행, when_date 에 오늘 날짜 넣기
+    window.onload = function () {
+        buildCalendar();
+        
+        // 현재 날짜 가져오기
+        var today = new Date();
+        
+        // 날짜를 "YYYY-MM-DD" 형식으로 변환
+        var formattedDate = today.toISOString().slice(0, 10);
+        
+        // input 요소 찾아서 날짜 설정
+        var dateInput = document.getElementById("when_date");
+        dateInput.value = formattedDate;
+    };
 
         var nowMonth = new Date();  // 현재 달을 페이지를 로드한 날의 달로 초기화
         var today = new Date();     // 페이지를 로드한 날짜를 저장
@@ -41,26 +54,18 @@
                 var nowColumn = nowRow.insertCell();        // 새 열을 추가하고
 
                 nowColumn.innerText = leftPad(nowDay.getDate());      // 추가한 열에 날짜 입력
+                
+                // 셀 추가하면서 DB 데이터랑 날짜가 겹치면 money_sum 출력하기
                 <c:forEach var="cal" items="${requestScope.calMap.calList}" varStatus="vs">
-            	if("${cal.schedule_start_date}".substr(0,4)==nowMonth.getFullYear()
-            			&&"${cal.schedule_start_date}".substr(4,2)==leftPad(nowMonth.getMonth() + 1)
-            			&&"${cal.schedule_start_date}".substr(6,2)==leftPad(nowDay.getDate())){
-            		nowColumn.innerText = leftPad(nowDay.getDate())+'\n'+"${cal.subject}";
-            		nowColumn.style.backgroundColor = "${cal.color}";
+            	if("${cal.when_date}".substr(0,4)==nowMonth.getFullYear()
+            			&&"${cal.when_date}".substr(5,2)==leftPad(nowMonth.getMonth() + 1)
+            			&&"${cal.when_date}".substr(8,2)==leftPad(nowDay.getDate())){
+            		nowColumn.innerText = leftPad(nowDay.getDate())+'\n'+"${cal.money_sum}"+"원";
                     nowColumn.style.cursor = "pointer";
-            		nowColumn.className = "${cal.cal_num}";
+                    nowColumn.className = "${cal.when_date}"; 
             	}
             	</c:forEach>
-            	<c:forEach var="cal" items="${requestScope.calMap.calList}" varStatus="vs">
-            	if("${cal.schedule_end_date}".substr(0,4)==nowMonth.getFullYear()
-            			&&"${cal.schedule_end_date}".substr(4,2)==leftPad(nowMonth.getMonth() + 1)
-            			&&"${cal.schedule_end_date}".substr(6,2)==leftPad(nowDay.getDate())){
-            		nowColumn.innerText = leftPad(nowDay.getDate())+'\n'+"${cal.subject}";
-            		nowColumn.style.backgroundColor = "${cal.color}";
-                    nowColumn.style.cursor = "pointer";
-            		nowColumn.className = "${cal.cal_num}";
-            	}
-            	</c:forEach>
+            	
             	
             	
                 if (nowDay.getDay() == 0) {                 // 일요일인 경우 글자색 빨강으로
@@ -84,7 +89,7 @@
 
         // 날짜 선택 후 상세 페이지
         function choiceDate(nowColumn) {
-            showPopup_detail($(nowColumn).attr("class"));
+        	showPopup_list($(nowColumn).attr("class"));
         }
         
         // 이전달 버튼 클릭
@@ -110,9 +115,35 @@
         
         function showPopup(){
             $(".popup_main").animate({ scrollTop: 0 }, "fast");
-            $('.popup').show();   
-            
+            $('.popup').show(); 
          }
+        
+        function showPopup_list(date) {
+            $("[name='select_when_date']").val(date);
+            $(".popup_main_list").animate({ scrollTop: 0 }, "fast");
+            $('.popup_list').show();
+
+            ajax(
+                "/calMoreList.do",
+                "post",
+                $("[name='listForm']"),
+                function(responseHtml) {
+
+                    // search_list 안의 HTML을 받아온 HTML로 덮어씌우기
+                    $(".search_list").html(responseHtml);
+
+                    // 취소, 수입/지출 추가 버튼 추가
+                    var buttonsHtml = "<div style='display: flex;'>";
+                    buttonsHtml += "<span onclick='closePopup()' name='cancel' class='cancel' style='cursor: pointer;'>취소</span>";
+                    buttonsHtml += "<span onclick='showPopup()' name='add' class='add' style='cursor: pointer;'>수입/지출 추가</span>";
+                    buttonsHtml += "</div>";
+
+                    $(".search_list").append(buttonsHtml);
+                }
+            );
+        }
+
+
         function showPopup_detail(cal_num){
             $(".popup_main_detail").animate({ scrollTop: 0 }, "fast");
             $('.popup_detail').show();   
@@ -137,7 +168,7 @@
          }
         
         function update(){        	
-        	var obj=$("[name='upDelForm']");
+        	/* var obj=$("[name='upDelForm']");
         	var check_subject = obj.find("[name='subject']");
         	var check_schedule_start_date = obj.find("[name='schedule_start_date']");
         	var check_schedule_end_date = obj.find("[name='schedule_end_date']");
@@ -171,7 +202,7 @@
        	     	check_color.focus();
        	        return;
        	    }
-       		
+       		 */
 
         	if( confirm("수정하시겠습니까?")==false ) { return; }
         	
@@ -195,7 +226,7 @@
         
         
         function add(){
-        	var obj=$("[name='schedulerForm']");
+        	/* var obj=$("[name='schedulerForm']");
         	var check_subject = obj.find("[name='subject']");
         	var check_schedule_start_date = obj.find("[name='schedule_start_date']");
         	var check_schedule_end_date = obj.find("[name='schedule_end_date']");
@@ -228,20 +259,20 @@
        	        alert("표시 색상을 선택해주세요.");
        	     	check_color.focus();
        	        return;
-       	    }
+       	    } */
         	
         	ajax(
                     "/addCal.do"
                     ,"post"
-                    ,$("[name='schedulerForm']")
+                    ,$("[name='money_calForm']")
                     ,function(responseJson){
                         var addCnt = responseJson["addCnt"];
 	                    if(addCnt==1){
-	                    	alert("일정이 추가되었습니다.")
+	                    	alert("추가되었습니다.")
 	                    	closePopup();
 	                    }
 	                    else{
-	                    	alert("일정 추가 중 오류가 발생했습니다. 잠시 후 시도해주십시오.")
+	                    	alert("오류가 발생했습니다. 잠시 후 시도해주십시오.")
 	                    }
                     }
                )
@@ -289,8 +320,8 @@
                     <span id="calMonth"></span>월
                 </td>
                 <td onClick="nextCalendar();" style="cursor:pointer;">&#62;</td>
-                <td class="add" colspan="2" style="cursor:pointer" onclick="showPopup()" >
-			        + 일정 추가
+                <td class="add1" colspan="2" style="cursor:pointer" onclick="showPopup()" >
+			        + 수입/지출 추가
 			    </td>
             </tr>
             <tr class="header">
@@ -311,44 +342,73 @@
     <div class='popup'>
         <div class="dim">
           <div class='popup_main'>
-                <form name="schedulerForm" class="schedulerForm">
-                    <header class="title">새로운 일정 추가</header>
+                <form name="money_calForm" class="money_calForm">
+                    <header class="title">수입/지출 추가</header>
                     <div>
-                        <div>일정 이름</div>
-                        <div><input type="text" name="subject"></div>
-                    </div>
-                    <div>
-                        <div>기간</div>
-                        <div><input type="datetime-local" name="schedule_start_date">
-                                ~ <input type="datetime-local" name="schedule_end_date"></div>
-                    </div>
-                    <div>
-                        <div>내용</div>
+                        <div>수입/지출</div>
                         <div>
-                        <textarea name="summary" rows="5" cols="110">
-						</textarea>
-                        </div>
-                    </div>
-                    <div>
-                        <div>장소</div>
-                        <div><input type="text" name="location"></div>
-                    </div>
-                    <div>
-                        <div>표시색상</div>
-                        <div>
-                            <select name="color">
+                        	<select name="inOrOut">
                                 <option></option>
-                                <option style="background-color:#fe4d4d" value="#fe4d4d">빨강</option>
-                                <option style="background-color:#fefca4" value="#fefca4">노랑</option>
-                                <option style="background-color:#8fefa4" value="#8fefa4">초록</option>
-                                <option style="background-color:#92ddfb" value="#92ddfb">파랑</option>
-                                <option style="background-color:#dac5fb" value="#dac5fb">보라</option>
-                                <option style="background-color:#fdd7ea" value="#fdd7ea">분홍</option>
-                            </select>
+                                <option value="수입">수입</option>
+                                <option value="지출">지출</option>
+                               
+                           </select>
+						</div>
+                    </div>
+                    <div>
+                        <div>금액</div>
+                        <div>
+                        <input type="number" name="money">
                         </div>
+                    </div>
+                    <div>
+                        <div>수입/지출명</div>
+                        <div>
+                        <input type="text" name="subject">
+                        </div>
+                    </div>
+                    <div>
+                        <div>날짜</div>
+                        <div>
+                        <input type="date" id="when_date" name="when_date">
+                        </div>
+                    </div>
+                    <div>
+                        <div>메모</div>
+                        <div><input type="text" name="memo"></div>
                     </div>
                     <span onclick="add()" name="save" class="save" style="cursor: pointer;">저장</span>
                     <span onclick="closePopup()" name="cancel" class="cancel" style="cursor: pointer;">취소</span>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class='popup_list'>
+        <div class="dim_list">
+          <div class='popup_main_list'>
+                <form name="listForm" class="listForm">
+                    <header class="title">수입/지출 목록</header>
+        			<input type="hidden" name="select_when_date">
+                    <div style="display: flex;">
+                        <div>수입/지출</div>
+                        <div>금액</div>
+                        <div>수입/지출명</div>
+                        <div>메모</div>
+                    </div>
+                    <div class="search_list">
+                    <c:forEach var="calMore" items="${requestScope.calMoreListMap.calMoreList}" varStatus="vs">
+                    <div style="display: flex;" onclick="showPopup_detail($(calMore.cal_num))">
+                       	<div>${requestScope.calMoreListMap.begin_serialNo_desc-vs.index}</div>
+                       	<div>${calMore.category_money}</div>
+                       	<div>${calMore.money}</div>
+                       	<div>${calMore.subject}</div>
+                       	<div>${calMore.memo}</div>
+					</div>
+					</div>
+					</c:forEach>
+                    <span onclick="closePopup()" name="cancel" class="cancel" style="cursor: pointer;">취소</span>
+                    <span onclick="showPopup()" name="add" class="add" style="cursor: pointer;">수입/지출 추가</span>
+                    
                 </form>
             </div>
         </div>
@@ -357,41 +417,40 @@
         <div class="dim_detail">
           <div class='popup_main_detail'>
                 <form name="upDelForm" class="upDelForm">
-                    <header class="title">일정 수정</header>
+                    <header class="title">수입/지출 수정</header>
         			<input type="hidden" name=cal_num>
                     <div>
-                        <div>일정 이름</div>
-                        <div><input type="text" name="subject"></div>
-                    </div>
-                    <div>
-                        <div>기간</div>
-                        <div><input type="datetime-local" name="schedule_start_date">
-                                ~ <input type="datetime-local" name="schedule_end_date"></div>
-                    </div>
-                    <div>
-                        <div>내용</div>
+                        <div>수입/지출</div>
                         <div>
-                        <textarea name="summary" rows="5" cols="110">
-						</textarea>
-                        </div>
-                    </div>
-                    <div>
-                        <div>장소</div>
-                        <div><input type="text" name="location"></div>
-                    </div>
-                    <div>
-                        <div>표시색상</div>
-                        <div>
-                            <select name="color">
+                        	<select name="inOrOut">
                                 <option></option>
-                                <option style="background-color:#fe4d4d" value="#fe4d4d">빨강</option>
-                                <option style="background-color:#fefca4" value="#fefca4">노랑</option>
-                                <option style="background-color:#8fefa4" value="#8fefa4">초록</option>
-                                <option style="background-color:#92ddfb" value="#92ddfb">파랑</option>
-                                <option style="background-color:#dac5fb" value="#dac5fb">보라</option>
-                                <option style="background-color:#fdd7ea" value="#fdd7ea">분홍</option>
-                            </select>
+                                <option value="income">수입</option>
+                                <option value="expense">지출</option>
+                               
+                           </select>
+						</div>
+                    </div>
+                    <div>
+                        <div>금액</div>
+                        <div>
+                        <input type="number" name="money">
                         </div>
+                    </div>
+                    <div>
+                        <div>수입/지출명</div>
+                        <div>
+                        <input type="text" name="subject">
+                        </div>
+                    </div>
+                    <div>
+                        <div>날짜</div>
+                        <div>
+                        <input type="date" id="when_date" name="when_date">
+                        </div>
+                    </div>
+                    <div>
+                        <div>메모</div>
+                        <div><input type="text" name="memo"></div>
                     </div>
                     <span onclick="update()" name="update" class="update" style="cursor: pointer;">수정</span>
                     <span onclick="cal_delete()" name="delete" class="delete" style="cursor: pointer;">삭제</span>

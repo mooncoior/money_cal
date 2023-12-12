@@ -23,14 +23,14 @@ public class CalendarController {
 
 	
 	
-	@RequestMapping(value="/calendar.do")
+	@RequestMapping(value="/money_cal.do")
 	public ModelAndView calendarList(
 			CalendarDTO calendarDTO
 			)
 	{
 		Map<String,Object> calMap = getCalMap(calendarDTO);
 		ModelAndView mav = new ModelAndView();
-		mav.setViewName("calendar.jsp");	
+		mav.setViewName("money_cal.jsp");	
 		mav.addObject("calMap", calMap);
 		return mav;
 	}
@@ -47,6 +47,36 @@ public class CalendarController {
 			return resultMap;
 	}
 	
+	@RequestMapping(value = "/calMoreList.do", produces = "text/html;charset=UTF-8")
+	@ResponseBody
+	public String calMoreList(CalendarDTO calendarDTO, HttpSession session) {
+	    String htmlResult = getCalMoreListHtml(calendarDTO);
+	    return htmlResult;
+	}
+
+	public String getCalMoreListHtml(CalendarDTO calendarDTO) {
+	    List<Map<String, String>> calMoreList = this.calDAO.getCalMoreList(calendarDTO);
+
+	    // 예시: HTML 생성
+	    StringBuilder htmlBuilder = new StringBuilder();
+	    htmlBuilder.append("<div class='calMoreList'>");
+	    for (Map<String, String> calMore : calMoreList) {
+	        htmlBuilder.append("<div style='display: flex;' onclick='showPopup_detail(")
+	            .append(calMore.get("cal_num"))
+	            .append(")'>");
+	        htmlBuilder.append("<div>").append(calMore.get("category_money")).append("</div>");
+	        htmlBuilder.append("<div>").append(calMore.get("money")).append("</div>");
+	        htmlBuilder.append("<div>").append(calMore.get("subject")).append("</div>");
+	        htmlBuilder.append("<div>").append(calMore.get("memo")).append("</div>");
+	        htmlBuilder.append("</div>");
+	    }
+	    htmlBuilder.append("</div>");
+
+	    return htmlBuilder.toString();
+	}
+
+
+		
 	@RequestMapping(
 			 value="/calDetail.do",
 			 method = RequestMethod.POST,

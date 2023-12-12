@@ -1,19 +1,24 @@
 package com.naver.erp;
 
 public class CalendarDTO {
-	private String subject;						 
-	private String schedule_start_date;								 
-	private String schedule_end_date;		 
-	private String summary;								 
-	private String location;						 
-	private String color;					 
-	private String cal_num;			
-	
-	public String getCal_num() {
-		return cal_num;
+	private String inOrOut;									 
+	private String when_date;		 
+	private String subject;								 
+	private String memo;					 
+	private String cal_num;				 
+	private String money;			 
+	private String select_when_date;
+	public String getInOrOut() {
+		return inOrOut;
 	}
-	public void setCal_num(String cal_num) {
-		this.cal_num = cal_num;
+	public void setInOrOut(String inOrOut) {
+		this.inOrOut = inOrOut;
+	}
+	public String getWhen_date() {
+		return when_date;
+	}
+	public void setWhen_date(String when_date) {
+		this.when_date = when_date;
 	}
 	public String getSubject() {
 		return subject;
@@ -21,36 +26,30 @@ public class CalendarDTO {
 	public void setSubject(String subject) {
 		this.subject = subject;
 	}
-	public String getSchedule_start_date() {
-		return schedule_start_date;
+	public String getMemo() {
+		return memo;
 	}
-	public void setSchedule_start_date(String schedule_start_date) {
-		this.schedule_start_date = schedule_start_date;
+	public void setMemo(String memo) {
+		this.memo = memo;
 	}
-	public String getSchedule_end_date() {
-		return schedule_end_date;
+	public String getCal_num() {
+		return cal_num;
 	}
-	public void setSchedule_end_date(String schedule_end_date) {
-		this.schedule_end_date = schedule_end_date;
+	public void setCal_num(String cal_num) {
+		this.cal_num = cal_num;
 	}
-	public String getSummary() {
-		return summary;
+	public String getMoney() {
+		return money;
 	}
-	public void setSummary(String summary) {
-		this.summary = summary;
+	public void setMoney(String money) {
+		this.money = money;
 	}
-	public String getLocation() {
-		return location;
+	public String getSelect_when_date() {
+		return select_when_date;
 	}
-	public void setLocation(String location) {
-		this.location = location;
+	public void setSelect_when_date(String select_when_date) {
+		this.select_when_date = select_when_date;
 	}
-	public String getColor() {
-		return color;
-	}
-	public void setColor(String color) {
-		this.color = color;
-	}		
-
 	
-}
+	
+	}

@@ -14,4 +14,5 @@ public interface CalDAO {
 	int delCal(CalendarDTO calendarDTO);
 	List<Map<String,String>> getCalList(CalendarDTO calendarDTO);
 	List<Map<String,String>> getCalDetail(CalendarDTO calendarDTO);
+	List<Map<String,String>> getCalMoreList(CalendarDTO calendarDTO);
 }

@@ -3,83 +3,70 @@
 <mapper namespace="com.naver.erp.CalDAO">
 
 <insert id="addCal" parameterType="com.naver.erp.CalendarDTO">
-	insert into calendar(
+	insert into money_cal(
 		cal_num
+		,category_money
+		,amount_money
 		,subject
-         <if test="summary!=null and summary.length()>0">
-		,summary
-		</if>
-		,schedule_start_date
-		,schedule_end_date
-		<if test="location!=null and location.length()>0">
-		,location
-		</if>
-		,color) 
+		,when_date
+		<if test="memo!=null and memo.length()>0">
+		,memo
+		</if>) 
 	values(
-		(select nvl(max(to_number(cal_num)),0)+1 from calendar)
+		(select nvl(max(to_number(cal_num)),0)+1 from money_cal)
+		,#{inOrOut}
+		<if test = "inOrOut=='지출'">,-${money}</if>
+		<if test = "inOrOut=='수입'">,${money}</if>
 		,#{subject}
-         <if test="summary!=null and summary.length()>0">
-		,#{summary}
+		,to_date(#{when_date},'yyyy-mm-dd')
+         <if test="memo!=null and memo.length()>0">
+		,#{memo}
 		</if>
-		,to_date(substr(#{schedule_start_date},1,10)||' '||substr(#{schedule_start_date},12),'yyyy-mm-dd hh24:mi')
-		,to_date(substr(#{schedule_end_date},1,10)||' '||substr(#{schedule_end_date},12),'yyyy-mm-dd hh24:mi')
-         <if test="location!=null and location.length()>0">
-		,#{location}
-		</if>
-		,#{color}
 	)
 </insert>
 
 <select id="getCalList" parameterType="com.naver.erp.CalendarDTO" resultType="java.util.HashMap">
 	select 
-		cal_num "cal_num"
-		,subject "subject"
-		,summary "summary"
-		,to_char(schedule_start_date,'yyyymmdd') "schedule_start_date"
-		,to_char(schedule_end_date,'yyyymmdd') "schedule_end_date"
-		,location "location"
-		,color "color"
-	from calendar
+        to_char(when_date,'yyyy-mm-dd') "when_date" 
+        ,sum(amount_money) "money_sum"
+    from money_cal 
+    group by to_char(when_date,'yyyy-mm-dd')
 </select>
+
+<select id="getCalMoreList" parameterType="com.naver.erp.CalendarDTO" resultType="java.util.HashMap">
+	select 
+		cal_num||'' "cal_num"
+		,category_money "category_money"
+		,subject "subject"
+		,amount_money||'' "money"
+		,to_char(when_date,'yyyy-mm-dd') "when_date"
+		,nvl(memo,' ') "memo"
+	from money_cal
+	where when_date = #{select_when_date}
+</select>
+
 <select id="getCalDetail" parameterType="com.naver.erp.CalendarDTO" resultType="java.util.HashMap">
 	select 
 		cal_num "cal_num"
 		,subject "subject"
-		,summary "summary"
-		,to_char(schedule_start_date,'yyyy-mm-dd')||'T'||to_char(schedule_start_date,'hh24:mi') "schedule_start_date"
-		,to_char(schedule_end_date,'yyyy-mm-dd')||'T'||to_char(schedule_end_date,'hh24:mi') "schedule_end_date"
-		,location "location"
-		,color "color"
-	from calendar
+		,to_char(when_date,'yyyy-mm-dd')||'T'||to_char(when_date,'hh24:mi') "when_date"
+		,memo "memo"
+	from money_cal
 	where cal_num = ${cal_num}
 </select>
 
 
 <update id="upCal"  parameterType="com.naver.erp.CalendarDTO" >
 		update
-			calendar
+			money_cal
 		set
 			subject  = #{subject}
-			,schedule_start_date = to_date(substr(#{schedule_start_date},1,10)||' '||substr(#{schedule_start_date},12),'yyyy-mm-dd hh24:mi')
-			,schedule_end_date = to_date(substr(#{schedule_end_date},1,10)||' '||substr(#{schedule_end_date},12),'yyyy-mm-dd hh24:mi')
-			,color = #{color}
-			<if test = "location!=null and location.length()>0">
-				,location = #{location}
-			</if>
-			<if test = "location==null or location.length()==0">
-				,location = null
-			</if>
-			<if test = "summary!=null and summary.length()>0">
-				,summary = #{summary}
-			</if>
-			<if test = "summary==null or summary.length()==0">
-				,summary = null
-			</if>
+			
 		where
 			cal_num=${cal_num} 
 </update>
 <delete id="delCal"  parameterType="com.naver.erp.CalendarDTO" >
-		delete from calendar
+		delete from money_cal
 		where
 			cal_num=${cal_num} 
 </delete>
