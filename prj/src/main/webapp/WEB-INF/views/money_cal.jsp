@@ -128,7 +128,9 @@
                 "post",
                 $("[name='listForm']"),
                 function(responseHtml) {
-
+					if(responseHtml=="<div class='calMoreList'></div>"){
+						responseHtml="<div class='empty_calMoreList'>수입/지출이 없습니다.</div>"
+					}
                     // search_list 안의 HTML을 받아온 HTML로 덮어씌우기
                     $(".search_list").html(responseHtml);
 
@@ -333,7 +335,7 @@
                     <div>
                         <div>날짜</div>
                         <div>
-                        <input type="date" id="when_date" name="when_date">
+                        <input type="date" id="when_date" name="when_date" style="width:0; min-width: 174px;">
                         </div>
                     </div>
                     <div>
@@ -352,7 +354,7 @@
                 <form name="listForm" class="listForm">
                     <header class="title_list">수입/지출 목록</header>
         			<input type="hidden" name="select_when_date">
-                    <div style="display: flex;">
+                    <div class="cal_search_list" style="display: flex;">
                         <div>수입/지출</div>
                         <div>금액</div>
                         <div>수입/지출명</div>
@@ -408,7 +410,7 @@
                     <div>
                         <div>날짜</div>
                         <div>
-                        <input type="date" id="when_date" name="when_date">
+                        <input type="date" id="when_date" name="when_date" style="width:0; min-width: 174px;">
                         </div>
                     </div>
                     <div>

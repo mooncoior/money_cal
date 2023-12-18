@@ -6,6 +6,10 @@ textarea {
    outline: none;
   resize: none;
 }
+date{
+	width:0;
+	min-width:1000px;
+}
 
 select,
 textarea,
@@ -28,14 +32,14 @@ td {
 	align: center;
     text-align: center;
     margin: 0 auto; 
-    width: 60%;
-    height: 90%;
+    width: 80%;
+    height: 100%;
 }
 .header{
 	font-size:20px;
 }
 .dateHeader{
-	font-size:30px;
+	font-size:20px;
 }
 .add{
 	font-size:20px;
@@ -51,31 +55,17 @@ td {
     color: black;
 }        
 
-/* .pastDay{ background-color: lightgray; } */
-
-.today{            
-	border: 3px solid #fd8aa9;          
-    cursor: pointer;
+.Calendar
+,.Calendar>thead{
+	font-size:90%	
 }
-
-.futureDay{            
-    background-color: #FFFFFF;
-    cursor: pointer;
-}
-
-.futureDay.choiceDay, .today.choiceDay{            
-    background-color: #3E85EF;            
-    color: #fff;
-    cursor: pointer;
-}		
 
 .popup_detail
 ,.popup_list{
   z-index: 999;
 	
 }
-.popup
- {
+.popup{
    z-index: 1000;
 }
 .popup
@@ -86,10 +76,12 @@ td {
    top: 0; left: 0;
    width: 100%; height: 100%;
    padding: 20px;
+   font-size:12px;
 }
 .dim
 ,.dim_detail
 ,.dim_list {
+   font-size:12px;
   position: absolute;
   z-index: 990;
   top: 0; left: 0;
@@ -99,25 +91,77 @@ td {
 .popup_main
 ,.popup_main_detail
 ,.popup_main_list {
+   font-size:12px;
   position: absolute;
   top: 50%; left: 50%;
   transform: translate(-50%, -50%);
-   width: 40%; height: 70%;
+   width: 40%; height: 75%;
   background: #fff;
   border-radius: 5px;
   box-shadow: 0 0 10px rgb(0 , 0, 0, 0.5);
   padding: 15px;
   overflow: scroll;
 }
-.money_cal_Form > div
-,.upDelForm > div {
-	padding: 5px;
+
+
+.cal_search_list > div{
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
    border: 1px solid lightgray;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+	padding: 5px;
+	background-color: #fee0e9;
 }
-.money_cal_Form > div > div
-,.upDelForm > div > div {
-	padding: 10px;
+.calMoreList > div > div{
+ width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+   border: 1px solid lightgray;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+	padding: 5px;
 }
+
+.empty_calMoreList{
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+   border: 1px solid lightgray;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+	padding: 15px;
+}
+
+.money_calForm > div
+,.upDelForm > div{
+ display: flex;
+   align-items: center;
+   gap: 10px;
+   padding: 20px 0 20px;
+  border-bottom: 1px solid lightgrey;
+}
+.money_calForm > div > div,
+.upDelForm > div > div{
+ display: flex;
+   align-items: center;
+   width:13%;
+}
+
 .title
 ,.title_list {
 	font-size: 25px;
